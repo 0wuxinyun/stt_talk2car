@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+</head>
+<body>
+    <p>STT integrsation code !</p>
+    <p id='check'>1 check</p>
+    <p id='keyeventcheck'>2 check</p>
+    <button id="mic" class="mic-img" onclick="sttfunction()"><img src="./img.png" /></button>
+    <div ng-app="myApp" ng-controller="myCtrl">
+    <input type='text' placeholder="add something" ng-model='userMessage' ng-keypress='Keyevent($event)'> 
+    <button id='done' ng-click="sttchange()">Done recording</button> 
+    </div>  
+</body>
+</html>
+
+<script>
+    // button function:
+    var mic_on=false;
+    function sttfunction(){
+        if (mic_on){
+            //turn off the mic
+            document.getElementById('check').innerHTML='turn off mic';
+            mic_on=false
+        }else{
+            //turn on the mic 
+            document.getElementById('check').innerHTML='turn on mic';
+            mic_on=true
+        };
+    };
+
+
+    
+    // input text:
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function($scope) {
+    $scope.userMessage= "";
+    $scope.sttchange=function(){
+        $scope.userMessage='work'
+    }
+    $scope.Keyevent = function(KeyEvent){
+        if ($scope.userMessage&&KeyEvent.which===13){
+            document.getElementById('keyeventcheck').innerHTML='the keyevent works'
+        }
+
+        
+    }
+    });
+
+
+
+</script>
