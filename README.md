@@ -6,6 +6,7 @@ Part of my intern project @ Continental.
 - Notes: at intern notion.so
 
 I try the deepspeech module but not work quiet well in self-put data -> in the stt folder 
+[source](https://deepspeech.readthedocs.io)
 I move to other more popular library like the speech recognition. it work quite well -> the Web dev/stt folder 
 
 ### STT in javascript :
