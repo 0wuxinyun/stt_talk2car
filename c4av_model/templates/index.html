@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> 
+
+    <title>Talk2Car</title>
+</head>
+<body>
+    <h1>Speech to Text & Talk2Car</h1>
+    <p id='command'></p>
+    <div ng-app="myApp" ng-controller="myCtrl">
+        <input type='text' id='user_input' placeholder="Say something" ng-model='userMessage' ng-keypress='Keyevent($event)'> 
+    </div> 
+    <img id='img'  src= "/static/images/demo.png"   alt="click button to show img" width=500px height=500px float='center'/>
+    <br>
+    <button id="image" >Show Image</button>
+    <button id="mic" ><img src="./static/images/img.png" width="10" height="12"/></button>
+</body>
+</html>
+
+<script>
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function($scope) {
+    $scope.userMessage= "";
+  
+    var message = document.querySelector('#user_input');
+
+    // show image 
+    
+    $('#image').on('click', function(e){ 
+                
+			
+				$.ajax({ 
+                    url: '/show/', 
+					method: 'POST', 
+					success: function(data) { 
+                        location.reload()
+                        number=data['number'];
+                
+					} 
+				}); 
+            }); 
+
+    
+    // stt api
+    var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition;
+    var SpeechGrammarList = SpeechGrammarList || webkitSpeechGrammarList;
+    // setting
+    var grammar = '#JSGF V1.0;'
+    var recognition = new SpeechRecognition();
+    var speechRecognitionList = new SpeechGrammarList();
+    speechRecognitionList.addFromString(grammar, 1);
+    recognition.grammars = speechRecognitionList;
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+
+
+    // stt function:
+    recognition.onresult = function(event) {
+        // choose the final output :
+        var last = event.results.length - 1;
+        var command = event.results[last][0].transcript;
+        $scope.userMessage= command
+        message.value = command
+ 
+    }
+
+    recognition.onspeechend = function() {
+            recognition.stop();
+    };
+
+    recognition.onerror = function(event) {
+        message.value = 'Error occurred in recognition: ' + event.error;
+    }      
+
+    // mic button function:
+    $('#mic').on('click', function(e){ 
+            recognition.start();
+
+        }); 
+    
+    $scope.Keyevent = function(KeyEvent){
+    if ($scope.userMessage&&KeyEvent.which===13){
+        var command;
+        command=$scope.userMessage;
+        document.getElementById('command').innerHTML=$scope.userMessage
+        $scope.userMessage='';
+
+        $.ajax({ 
+                url: '/predict/', 
+                method: 'POST', 
+                data: {'command': command},
+                success: function(data) { 
+                    location.reload();
+                    ;
+                } 
+            }); 
+    }
+                
+    }
+    });
+  
+
+</script>
