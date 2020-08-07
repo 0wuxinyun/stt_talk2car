@@ -1,0 +1,34 @@
+<!DOCTYPE html> 
+<html lang='en'> 
+	<head> 
+		<title>Flask App</title> 
+		<style type="text/css"> 
+			* { 
+				font-family: sans-serif; 
+			} 
+		</style> 
+	</head> 
+	<body> 
+		<h1> Random</h1> 
+			<label for="num">Enter Number : </label> 
+			<input type="text" id="num" name="number" autofocus autocomplete="off"> 
+			<button id='click'>Post</button> 
+		<p id="random"></p> 
+		<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script> 
+		<script> 
+			$('#click').on('click', function(e){ 
+				var number = $('#num').val(); 
+			
+				$.ajax({ 
+                    url: '/random/', 
+					data: {'number': number}, 
+					method: 'POST', 
+					success: function(data) { 
+						$('#num').val(''); 
+						$('#random').html('random ' + number + ' numbers are ' + data['random']) 
+					} 
+				}); 
+			}); 
+		</script> 
+	</body> 
+</html> 
